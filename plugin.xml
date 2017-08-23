@@ -9,7 +9,7 @@
     <!-- android -->
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="IntentShim" >
+            <feature name="IntentExtras" >
                 <param name="android-package" value="pl.itexpert.IntentExtras"/>
             </feature>
         </config-file>
