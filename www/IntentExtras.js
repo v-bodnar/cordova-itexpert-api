@@ -17,4 +17,4 @@ IntentExtras.prototype.getIntent = function(successCallback, failureCallback) {
 
 window.intentExtras = new IntentExtras();
 window.plugins = window.plugins || {};
-window.plugins.intentShim = window.intentExtras;
+window.plugins.intentExtras = window.intentExtras;
