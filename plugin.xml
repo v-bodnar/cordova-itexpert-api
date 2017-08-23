@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="cordova-android-intent-extras" version="0.0.14" xmlns="http://apache.org/cordova/ns/plugins/1.0"
+<plugin id="cordova-android-intent-extras" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.androcordov.com/apk/res/android">
     <name>Intent Extras</name>
     <js-module name="IntentExtras" src="www/IntentExtras.js">
