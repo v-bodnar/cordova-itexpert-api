@@ -1,0 +1,25 @@
+{
+  "name": "cordova-android-intent-extras",
+  "version": "0.0.14",
+  "description": "",
+  "cordova": {
+    "id": "cordova-android-intent-extras",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/v-bodnar/cordova-android-intent-extras.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "Volodymyr Bodnar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/v-bodnar/cordova-android-intent-extras/issues"
+  },
+  "homepage": "https://github.com/v-bodnar/cordova-android-intent-extras#readme"
+}
