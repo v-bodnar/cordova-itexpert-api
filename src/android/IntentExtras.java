@@ -1,12 +1,23 @@
 package pl.itexpert.cordova;
 
 import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.CallbackContext;
 
+import android.content.Intent;
+import android.util.Log;
+import org.apache.cordova.PluginResult;
+import android.content.ClipData;
 import org.json.JSONArray;
+import android.content.ContentResolver;
+import android.webkit.MimeTypeMap;
+import android.os.Build;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.util.Arrays;
 
 public class IntentExtras extends CordovaPlugin {
+
+    private static final String LOG_TAG = "IntentExtras";
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
