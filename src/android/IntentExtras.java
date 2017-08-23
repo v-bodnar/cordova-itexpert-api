@@ -13,6 +13,7 @@ import android.webkit.MimeTypeMap;
 import android.os.Build;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.Arrays;
 
 public class IntentExtras extends CordovaPlugin {
@@ -23,7 +24,7 @@ public class IntentExtras extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         Log.d(LOG_TAG, "Action: " + action);
         if (action.equals("getIntent")) {
-            if(args.length() != 0) {
+            if (args.length() != 0) {
                 callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION));
                 return false;
             }
@@ -75,33 +76,32 @@ public class IntentExtras extends CordovaPlugin {
 
                 }
             }
+        }
+        try {
+            intentJSON = new JSONObject();
 
-            try {
-                intentJSON = new JSONObject();
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    if(items != null) {
-                        intentJSON.put("clipItems", new JSONArray(items));
-                    }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                if (items != null) {
+                    intentJSON.put("clipItems", new JSONArray(items));
                 }
-
-                intentJSON.put("type", intent.getType());
-                intentJSON.put("extras", toJsonObject(intent.getExtras()));
-                intentJSON.put("action", intent.getAction());
-                intentJSON.put("categories", intent.getCategories());
-                intentJSON.put("flags", intent.getFlags());
-                intentJSON.put("component", intent.getComponent());
-                intentJSON.put("data", intent.getData());
-                intentJSON.put("package", intent.getPackage());
-
-                return intentJSON;
-            } catch (JSONException e) {
-                Log.d(LOG_TAG, " Error thrown during intent > JSON conversion");
-                Log.d(LOG_TAG, e.getMessage());
-                Log.d(LOG_TAG, Arrays.toString(e.getStackTrace()));
-
-                return null;
             }
+
+            intentJSON.put("type", intent.getType());
+            intentJSON.put("extras", toJsonObject(intent.getExtras()));
+            intentJSON.put("action", intent.getAction());
+            intentJSON.put("categories", intent.getCategories());
+            intentJSON.put("flags", intent.getFlags());
+            intentJSON.put("component", intent.getComponent());
+            intentJSON.put("data", intent.getData());
+            intentJSON.put("package", intent.getPackage());
+
+            return intentJSON;
+        } catch (JSONException e) {
+            Log.d(LOG_TAG, " Error thrown during intent > JSON conversion");
+            Log.d(LOG_TAG, e.getMessage());
+            Log.d(LOG_TAG, Arrays.toString(e.getStackTrace()));
+
+            return null;
         }
     }
 
