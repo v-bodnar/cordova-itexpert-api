@@ -75,6 +75,33 @@ public class IntentExtras extends CordovaPlugin {
 
                 }
             }
+
+            try {
+                intentJSON = new JSONObject();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    if(items != null) {
+                        intentJSON.put("clipItems", new JSONArray(items));
+                    }
+                }
+
+                intentJSON.put("type", intent.getType());
+                intentJSON.put("extras", toJsonObject(intent.getExtras()));
+                intentJSON.put("action", intent.getAction());
+                intentJSON.put("categories", intent.getCategories());
+                intentJSON.put("flags", intent.getFlags());
+                intentJSON.put("component", intent.getComponent());
+                intentJSON.put("data", intent.getData());
+                intentJSON.put("package", intent.getPackage());
+
+                return intentJSON;
+            } catch (JSONException e) {
+                Log.d(LOG_TAG, " Error thrown during intent > JSON conversion");
+                Log.d(LOG_TAG, e.getMessage());
+                Log.d(LOG_TAG, Arrays.toString(e.getStackTrace()));
+
+                return null;
+            }
         }
     }
 }
