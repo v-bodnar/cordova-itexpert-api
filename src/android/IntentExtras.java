@@ -15,6 +15,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.lang.reflect.Array;
+import android.os.Bundle;
 
 public class IntentExtras extends CordovaPlugin {
 
