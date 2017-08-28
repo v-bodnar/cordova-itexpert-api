@@ -5,17 +5,34 @@ import org.apache.cordova.CallbackContext;
 
 import android.content.Intent;
 import android.util.Log;
+
+import org.apache.cordova.LOG;
 import org.apache.cordova.PluginResult;
+
 import android.content.ClipData;
+
 import org.json.JSONArray;
+
 import android.content.ContentResolver;
 import android.webkit.MimeTypeMap;
 import android.os.Build;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.Arrays;
 import java.lang.reflect.Array;
+
 import android.os.Bundle;
 
 public class ItexpertApi extends CordovaPlugin {
@@ -33,52 +50,86 @@ public class ItexpertApi extends CordovaPlugin {
             Intent intent = cordova.getActivity().getIntent();
             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, getIntentJson(intent)));
             return true;
-        }else if (action.equals("sendDatabases")) {
-            if (args.length() != 0) {
+        } else if (action.equals("sendDatabases")) {
+            if (args.length() != 2) {
                 callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION));
                 return false;
             }
-            Intent intent = cordova.getActivity().getIntent();
-            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, sendDatabases()));
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, sendDatabases((String) args.get(0), (String) args.get(1))));
             return true;
         }
 
         return false;
     }
 
-    private JSONObject sendDatabases() {
-        Log.d(TAG, notification.toString());
-        try {
-            File sd = Environment.getExternalStorageDirectory();
-            File data = Environment.getDataDirectory();
-
-            if (sd.canWrite()) {
-                String currentDBPath = "/data/data/" + getPackageName() + "/databases/knfAlert.db";
-                File currentDB = new File(currentDBPath);
-                String url = "http://localhost:8080/upload";
-                try {
-
-                    //                    HttpClient httpclient = new DefaultHttpClient();
-//
-//                    HttpPost httppost = new HttpPost(url);
-//
-//                    InputStreamEntity reqEntity = new InputStreamEntity(
-//                            new FileInputStream(currentDB), -1);
-//                    reqEntity.setContentType("binary/octet-stream");
-////                    reqEntity.setChunked(true); // Send in multiple parts if needed
-//                    httppost.setEntity(reqEntity);
-//                    HttpResponse response = httpclient.execute(httppost);
-//                    Log.d(TAG, "" + response.getStatusLine().getStatusCode());
-
-                } catch (Exception e) {
-                    // show error
-                }
-//                }
-            }
-        } catch (Exception e) {
-
+    private JSONObject sendDatabases(String url, String databaseName) {
+        Log.d(LOG_TAG, "Sending database file: " + databaseName + " to url: " + url);
+        File dbFile = new File("/data/data/" + cordova.getActivity().getPackageName() + "/databases/" + databaseName);
+        if (!dbFile.exists() || !dbFile.canRead()) {
+            LOG.e(LOG_TAG, "File not found or not readable");
+            return jsonMessage(404, "File not found or not readable");
         }
-        return true;
+        try {
+            HttpURLConnection urlConnection = (HttpURLConnection) new URL(url).openConnection();
+
+
+            String boundaryString = "----SomeRandomText";
+
+            // Indicate that we want to write to the HTTP request body
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.addRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundaryString);
+
+            // Indicate that we want to write some data as the HTTP request body
+            urlConnection.setDoOutput(true);
+
+            OutputStream outputStreamToRequestBody = urlConnection.getOutputStream();
+            BufferedWriter httpRequestBodyWriter =
+                    new BufferedWriter(new OutputStreamWriter(outputStreamToRequestBody));
+
+            // Include the section to describe the file
+            httpRequestBodyWriter.write("\n--" + boundaryString + "\n");
+            httpRequestBodyWriter.write("Content-Disposition: form-data;"
+                    + "name=\"dbFile\";"
+                    + "filename=\"" + databaseName + "\""
+                    + "\nContent-Type: text/plain\n\n");
+            httpRequestBodyWriter.flush();
+
+            // Write the actual file contents
+            FileInputStream inputStreamToLogFile = new FileInputStream(dbFile);
+
+            int bytesRead;
+            byte[] dataBuffer = new byte[1024];
+            while ((bytesRead = inputStreamToLogFile.read(dataBuffer)) != -1) {
+                outputStreamToRequestBody.write(dataBuffer, 0, bytesRead);
+            }
+
+            outputStreamToRequestBody.flush();
+
+            // Mark the end of the multipart http request
+            httpRequestBodyWriter.write("\n--" + boundaryString + "--\n");
+            httpRequestBodyWriter.flush();
+
+            // Close the streams
+            outputStreamToRequestBody.close();
+            httpRequestBodyWriter.close();
+
+            return jsonMessage(200, "Db file has been sent");
+        } catch (IOException e) {
+            LOG.e(LOG_TAG, e.getMessage(), e);
+            return jsonMessage(400, e.getMessage());
+        }
+    }
+
+    private JSONObject jsonMessage(int status, String message) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("status", status);
+            jsonObject.put("message", message);
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+        }
+        return jsonObject;
     }
 
     private JSONObject getIntentJson(Intent intent) {
