@@ -1,7 +1,6 @@
 {
   "name": "cordova-itexpert-api",
   "version": "0.0.1",
-  "description": "",
   "cordova": {
     "id": "cordova-itexpert-api",
     "platforms": [
@@ -21,5 +20,6 @@
   "bugs": {
     "url": "https://github.com/v-bodnar/cordova-android-intent-extras/issues"
   },
-  "homepage": "https://github.com/v-bodnar/cordova-android-intent-extras#readme"
+  "homepage": "https://github.com/v-bodnar/cordova-android-intent-extras#readme",
+  "description": ""
 }
