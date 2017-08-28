@@ -114,7 +114,7 @@ public class ItexpertApi extends CordovaPlugin {
             outputStreamToRequestBody.close();
             httpRequestBodyWriter.close();
 
-            return jsonMessage(200, "Db file has been sent");
+            return jsonMessage(urlConnection.getResponseCode(), urlConnection.getResponseMessage());
         } catch (IOException e) {
             LOG.e(LOG_TAG, e.getMessage(), e);
             return jsonMessage(400, e.getMessage());
