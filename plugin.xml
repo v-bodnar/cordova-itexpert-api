@@ -13,14 +13,7 @@
                 <param name="android-package" value="pl.itexpert.cordova.ItexpertApi"/>
             </feature>
         </config-file>
-        <config-file file="AndroidManifest.xml" mode="merge" target="/manifest/service">
-            <service android:name="pl.itexpert.cordova.NotificationExtender"
-                    android:exported="false">
-                <intent-filter>
-                    <action android:name="com.onesignal.NotificationExtender" />
-                </intent-filter>
-            </service>
-        </config-file>
+
 
         <source-file src="src/android/ItexpertApi.java" target-dir="src/pl/itexpert/cordova" />
     </platform>
