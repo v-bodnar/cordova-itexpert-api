@@ -1,9 +1,9 @@
 {
-  "name": "cordova-android-intent-extras",
+  "name": "cordova-itexpert-api",
   "version": "0.0.1",
   "description": "",
   "cordova": {
-    "id": "cordova-android-intent-extras",
+    "id": "cordova-itexpert-api",
     "platforms": [
       "android"
     ]

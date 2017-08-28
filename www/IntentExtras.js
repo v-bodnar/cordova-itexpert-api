@@ -6,15 +6,17 @@ var exec = require('cordova/exec'),
  * This represents a thin shim layer over the Android Intent implementation
  * @constructor
  */
-function IntentExtras() {
+function ItexpertApi() {
     var me = this;
 }
 
-IntentExtras.prototype.getIntent = function(successCallback, failureCallback) {
-    exec(successCallback, failureCallback, "IntentExtras", "getIntent", []);
+ItexpertApi.prototype.getIntent = function(successCallback, failureCallback) {
+    exec(successCallback, failureCallback, "ItexpertApi", "getIntent", []);
+};
+ItexpertApi.prototype.sendDatabase = function(successCallback, failureCallback, url, databaseName) {
+    exec(successCallback, failureCallback, "ItexpertApi", "sendDatabase", [url, databaseName]);
 };
 
-
-window.intentExtras = new IntentExtras();
+window.itexpertApi = new ItexpertApi();
 window.plugins = window.plugins || {};
-window.plugins.intentExtras = window.intentExtras;
+window.plugins.itexpertApi = window.itexpertApi;

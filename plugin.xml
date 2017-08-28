@@ -1,21 +1,28 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="cordova-android-intent-extras" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0"
+<plugin id="cordova-itexpert-api" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.androcordov.com/apk/res/android">
     <name>Intent Extras</name>
-    <js-module name="IntentExtras" src="www/IntentExtras.js">
-        <clobbers target="intentExtras" />
+    <js-module name="ItexpertApi" src="www/ItexpertApi.js">
+        <clobbers target="itexpertApi" />
     </js-module>
 
     <!-- android -->
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="IntentExtras" >
-                <param name="android-package" value="pl.itexpert.cordova.IntentExtras"/>
+            <feature name="ItexpertApi" >
+                <param name="android-package" value="pl.itexpert.cordova.ItexpertApi"/>
             </feature>
         </config-file>
+        <config-file file="AndroidManifest.xml" mode="merge" target="/manifest/service">
+            <service android:name="pl.itexpert.cordova.NotificationExtender"
+                    android:exported="false">
+                <intent-filter>
+                    <action android:name="com.onesignal.NotificationExtender" />
+                </intent-filter>
+            </service>
+        </config-file>
 
-
-        <source-file src="src/android/IntentExtras.java" target-dir="src/pl/itexpert/cordova" />
+        <source-file src="src/android/ItexpertApi.java" target-dir="src/pl/itexpert/cordova" />
     </platform>
 
 </plugin>

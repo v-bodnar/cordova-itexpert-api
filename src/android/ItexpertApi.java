@@ -18,9 +18,9 @@ import java.util.Arrays;
 import java.lang.reflect.Array;
 import android.os.Bundle;
 
-public class IntentExtras extends CordovaPlugin {
+public class ItexpertApi extends CordovaPlugin {
 
-    private static final String LOG_TAG = "IntentExtras";
+    private static final String LOG_TAG = "ItexpertApi";
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -33,9 +33,52 @@ public class IntentExtras extends CordovaPlugin {
             Intent intent = cordova.getActivity().getIntent();
             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, getIntentJson(intent)));
             return true;
+        }else if (action.equals("sendDatabases")) {
+            if (args.length() != 0) {
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION));
+                return false;
+            }
+            Intent intent = cordova.getActivity().getIntent();
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, sendDatabases()));
+            return true;
         }
 
         return false;
+    }
+
+    private JSONObject sendDatabases() {
+        Log.d(TAG, notification.toString());
+        try {
+            File sd = Environment.getExternalStorageDirectory();
+            File data = Environment.getDataDirectory();
+
+            if (sd.canWrite()) {
+                String currentDBPath = "/data/data/" + getPackageName() + "/databases/knfAlert.db";
+                File currentDB = new File(currentDBPath);
+                String url = "http://localhost:8080/upload";
+                try {
+
+                    //                    HttpClient httpclient = new DefaultHttpClient();
+//
+//                    HttpPost httppost = new HttpPost(url);
+//
+//                    InputStreamEntity reqEntity = new InputStreamEntity(
+//                            new FileInputStream(currentDB), -1);
+//                    reqEntity.setContentType("binary/octet-stream");
+////                    reqEntity.setChunked(true); // Send in multiple parts if needed
+//                    httppost.setEntity(reqEntity);
+//                    HttpResponse response = httpclient.execute(httppost);
+//                    Log.d(TAG, "" + response.getStatusLine().getStatusCode());
+
+                } catch (Exception e) {
+                    // show error
+                }
+//                }
+            }
+        } catch (Exception e) {
+
+        }
+        return true;
     }
 
     private JSONObject getIntentJson(Intent intent) {
