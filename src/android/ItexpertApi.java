@@ -1,10 +1,12 @@
 package pl.itexpert.cordova;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
@@ -64,6 +66,17 @@ public class ItexpertApi extends CordovaPlugin {
 
     private void sendDatabase(String url, String databaseName) {
         Log.d(LOG_TAG, "Sending database file: " + databaseName + " to url: " + url);
+
+        //determining device name, we will use it for file naming
+        String deviceName;
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
+            deviceName = Settings.Secure.getString(cordova.getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+        } else {
+            deviceName = mBluetoothAdapter.getName();
+        }
+
+        //Default database location
         File dbFile = new File("/data/data/" + cordova.getActivity().getPackageName() + "/databases/" + databaseName);
         if (!dbFile.exists() || !dbFile.canRead()) {
             LOG.e(LOG_TAG, "File not found or not readable");
@@ -91,7 +104,7 @@ public class ItexpertApi extends CordovaPlugin {
             // Include the section to describe the file
             httpRequestBodyWriter.writeBytes(twoHyphens + boundary + crlf);
             httpRequestBodyWriter.writeBytes("Content-Disposition: form-data; name=\"database\";filename=\"" +
-                    databaseName + "\"" + crlf + "\"");
+                    deviceName + "_" + databaseName + "\"" + crlf + "\"");
             httpRequestBodyWriter.writeBytes("Content-Transfer-Encoding: binary" + crlf);
             httpRequestBodyWriter.writeBytes(crlf);
             httpRequestBodyWriter.flush();
